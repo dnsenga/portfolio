@@ -1,4 +1,4 @@
-/* General styling    #3693ff*/
+/* General styling */
 * {
 	margin: 0;
 	padding: 0;
@@ -36,7 +36,7 @@ body {
 	color: #fff;
 }
 .time-primary {
-	color: #45a29e
+	color: #45a29e;
 }
 /* Navbar */
 #navigation-bar {
@@ -70,9 +70,8 @@ body {
 	font-size: 1.3rem;
 	margin: 0 0.5rem;
 	border-radius: 5px;
-	transition: background-color: 0.3s;
+    transition: color 0.3s, background 0.3s;
 }
-
 #navigation-bar li a:hover {
 	background-color: #66fcf1;
 }
@@ -202,10 +201,6 @@ body {
 	font-size: 1rem;
 }
 
-
-
-
-
 /* Section: Experience */
 
 #experience {
@@ -221,10 +216,8 @@ body {
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-
  	background: #1f2833;
  	padding: 25px;
-
  	max-width: 1100px;
 	margin: auto;
 }
@@ -254,7 +247,7 @@ body {
   	margin-bottom: 15px;
 }
 .experience-container ul li .company {
-  	color: #66fcf1;;
+  	color: #66fcf1;
 }
 
 .experience-container ul li .company-role {
@@ -286,13 +279,7 @@ body {
   	background: #66fcf1;
 }
 
-
-
-
-
 /* Section: gallery */
-
-
 
 #gallery {
 	height: 100vh;
@@ -396,14 +383,9 @@ body {
 .h-7{
     grid-row: span 6;
 }
-
 .h-8{
     grid-row: span 6;
 }
-
-
-
-
 
 
 /* Section; Contact */
@@ -440,7 +422,7 @@ body {
 #contact .form-group label {
 	display: block;
 	margin-bottom: 0.5rem;
-	width: 80%
+	width: 80%;
 	margin-left: 10%;
 	font-size: 1.1rem;
 }
@@ -452,7 +434,7 @@ body {
 	font-size: 1.3rem;
 	padding: 1rem;
 	border: 0.5px solid #333;
-	border-radius: 5px
+	border-radius: 5px;
 }
 
 #contact .form-group textarea {
@@ -467,7 +449,7 @@ body {
 	border: none;
 	border-radius: 5px;
 	font-size: 1.5rem;
-	background: #66fcf1;
+	background: #0b0c10;
 	color: #fff;
 	margin-bottom: 2rem;
 	cursor: pointer;
@@ -475,7 +457,7 @@ body {
 }
 
 #contact .contact-btn:hover {
-	background: #0b0c10;
+	background: #66fcf1;
 }
 
 #contact .form-container {
