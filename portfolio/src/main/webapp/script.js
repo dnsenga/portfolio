@@ -1,3 +1,4 @@
+
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +16,17 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+function addRandomImage() {
+    const pictures = ['9B9BC8F0-E900-4C97-9ED8-DE244974CE56.JPG', 'IMG-1944.jpg IMG-2293.jpg', 'IMG-0990.JPG', 'IMG-2029.jpg', 'IMG-7113.jpg', 'IMG-1926.jpg', 'IMG-2217.jpg', 'IMG-8551.jpg']
+  // Pick a random picture.
+    const picture = pictures[Math.floor(Math.random() * pictures.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+    const imageContainer = document.getElementById('image-container');
+    // greetingContainer.innerText = picture;
+
+    var img = imageContainer.querySelector('img')
+    img.src = 'images/IMG-2293.jpg'
+    //img.setAttribute('src', 'images/IMG-2293.jpg');
+    
 }
