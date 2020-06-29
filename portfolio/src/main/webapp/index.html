@@ -45,14 +45,17 @@
 					<h3>A Little Bit <span class="text-primary">About Me</span></h3>
 					<p class="lead">Hello, my name is Deus. I am a rising junior at Princeton University, majoring in Computer Science. I was born in Kigali, Rwanda, in a family of two children, and I am the eldest.</p>
 					<p class="lead">My interest mainly lies at the intersection of Business and Technology. I am very fascinated by the potential technologies such as Artificial Intelligence and Machine Learning have to substanntially change the world through unimaginable innovations.</p>
-					<p class="lead">In my fun time I enjoy music and sports. Click <a href="#music">here</a> to learn more about my music interest</p>
+					<p class="lead">In my fun time I enjoy music and sports. Click <a href="videos_pdfs/theFinalRide.mp4" target="_blank">here</a> to watch and listen to one of my musical projects. Click <a href="videos_pdfs/The_Final_Ride.pdf" target="_blank">here</a> to take a look at the score</p>
+					<a href="videos_pdfs/resume.pdf" target="_blank" download="DeusResume">
+						<button class="cv-btn">Download CV <i class="fa fa-download"></i></button>
+					</a>
 				</div>
 				<div class="about-image">
 					<img src="images/pic.jpeg" alt="Picture of Myself">
 				</div>
 				<div class="about-article">
 					<h4>Article</h4>
-					<a href="https://eipm.weill.cornell.edu/2019/08/please-welcome-deus-nsenga/">Englander Institute for Precision Medicine</a>
+					<a href="https://eipm.weill.cornell.edu/2019/08/please-welcome-deus-nsenga/" target="_blank">Englander Institute for Precision Medicine</a>
 				</div>
 			</div>
 		</div>
@@ -157,24 +160,25 @@
 				<div class="mail-icon"><i class="fas fa-envelope"></i></div>
 				<div class="form-box">
 					<h3>Email <span class="text-primary">Me</span></h3>
-					<form>
+					<form id="contact-form" action="https://formspree.io/mlepwaek" method="POST">
 						<div class="form-group">
-							<label for="first-name">First Name</label>
-							<input type="text" placeholder="Enter Your First Name">
+							<label for="first-name">First Name:</label>
+  							<input type="first-name" name="first-name" id="first-name" placeholder="Enter Your First Name">	
 						</div>
 						<div class="form-group">
-							<label for="last-name">Last Name</label>
-							<input type="text" placeholder="Enter Your Last Name">
+							<label for="last-name">Last Name:</label>
+  							<input type="last-name" name="last-name" id="last-name" placeholder="Enter Your Last Name">
 						</div>
 						<div class="form-group">
-							<label for="email">Email</label>
-							<input type="email" placeholder="Enter Your Email">
+							<label for="email">Email:</label>
+  							<input type="email" name="email" id="email-input" placeholder="Enter Your Email">
 						</div>
 						<div class="form-group">
-							<label for="message">Message</label>
-							<textarea rows="7" placeholder="Enter You Message"></textarea>
+							<label for="message">Message:</label>
+  							<textarea rows="7" name="message" id="message-input" placeholder="Enter You Message"></textarea>
 						</div>
-						<input type="submit" value="Send Message" class="contact-btn">
+  						<button id="button" class="contact-btn">Submit</button>
+  						<p id="my-form-status"></p>
 					</form>
 				</div>
 			</div>
