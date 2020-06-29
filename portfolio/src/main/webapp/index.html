@@ -1,41 +1,194 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body>
-    <div id="content-container">
-      <h1>My Portfolio</h1>
-      <image src="images/pic.jpeg"/>
-      <h2>Introduction</h2>
-      <p>Hello, I am Deus. I am a rising junior at Princeton University, majoring in Computer Science.</p>
-      <h2>Background</h2>
-      <p>I was born in Kigali, Rwanda, in a family of two children, and I am the eldest.</p>
-      <p>Click here to see random pictures of me</p>
-      <button onclick="addRandomGreeting()">images</button>
-      <div id="image-container">
-	<img src="images/IMG-1944.jpg" alt="Image" height="170" width="170"/>
-      </div>
-      <h2>Experience</h2>
-      <ul>
-	<li>Google, STEP Intern, Summer 2020</li>
-	<li>WEILL CORNELL MEDICINE: ENGLANDER INSTITUTE FOR PRECISION MEDICINE, Software Development Intern, Summer 2019</li>
-	<li>ComzAfrica, Research and Development Intern, Summer 2020</li>
-	<li>BKTechouse, Software Development Intern, Summer 2018</li>
-	<li>SolarSPELL, Research Intern, Spring 2018</li>
-      </ul>
-      <h2>Articles</h2>
-      <ul>
-	<li><a href="https://eipm.weill.cornell.edu/2019/08/please-welcome-deus-nsenga/"> Weill Cornell Medicine Article</a></li>
-      </ul>
-      <h2>Socials</h2>
-      <ul>
-	<li><a href="https://www.linkedin.com/in/deus-alleluia-nsenga-74703b144">Linkedin</a></li>
-	<li><a href = "https://github.com/dnsenga">Github</a></li>
-      </ul>
-    </div>
-  </body>
+<!--DOCTYTYPE html-->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="device-width, initial-scale=1.0">
+	<title>< Deus' Portfolio</title>
+	<script src="https://kit.fontawesome.com/b88b060ca1.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body id="home">
+	<!-- Navbar -->
+	<nav id="navigation-bar">
+		<h2><a href="#home"><span class="text-primary">Deus</span> Nsenga</a></h2>
+		<ul>
+			<li><a href="#home">Home</a></li>
+			<li><a href="#about">About</a></li>
+			<li><a href="#experience">Experience</a></li>
+			<li><a href="#gallery">Gallery</a></li>
+			<li><a href="#contact">Contact</a></li>
+		</ul>
+	</nav>
+	<!-- Section: Welcome Page -->
+	<header id="welcome-page">
+		<div class="welcome-page-content">
+			<div class="container">
+				<h1>Welcome To My <br> <span class="text-primary"> Page</span></h1>
+				<a href="#about" class="btn">Get to Know Me</a>
+				<!-- moving the socials -->
+				<div class="socials">
+					<li><a href="https://www.linkedin.com/in/deus-alleluia-nsenga-74703b144" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+					<li><a href="https://www.facebook.com/jvedbrown" target="_blank"><i class="fa fa-facebook-f" aria-hidden="true"></i></a></li>
+					<li><a href="https://www.instagram.com/deus_a_n/?hl=en" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+					<li><a href="https://twitter.com/DeusNsenga" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
+					<li><a href="https://github.com/dnsenga" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
+				</div>
+			</div>
+		</div>
+	</header>
+	 <!--Section: About -->
+	<section id="about">	
+		<div class="container">
+			<h2 class="about-heading">Get to Know <span class="text-primary">Me</span></h2>
+			<div class="about-content">
+				<div class="about-text">
+					<h3>A Little Bit <span class="text-primary">About Me</span></h3>
+					<p class="lead">Hello, my name is Deus. I am a rising junior at Princeton University, majoring in Computer Science. I was born in Kigali, Rwanda, in a family of two children, and I am the eldest.</p>
+					<p class="lead">My interest mainly lies at the intersection of Business and Technology. I am very fascinated by the potential technologies such as Artificial Intelligence and Machine Learning have to substanntially change the world through unimaginable innovations.</p>
+					<p class="lead">In my fun time I enjoy music and sports. Click <a href="videos_pdfs/theFinalRide.mp4" target="_blank">here</a> to watch and listen to one of my musical projects. Click <a href="videos_pdfs/The_Final_Ride.pdf" target="_blank">here</a> to take a look at the score</p>
+					<a href="videos_pdfs/resume.pdf" target="_blank" download="DeusResume">
+						<button class="cv-btn">Download CV <i class="fa fa-download"></i></button>
+					</a>
+				</div>
+				<div class="about-image">
+					<img src="images/pic.jpeg" alt="Picture of Myself">
+				</div>
+				<div class="about-article">
+					<h4>Article</h4>
+					<a href="https://eipm.weill.cornell.edu/2019/08/please-welcome-deus-nsenga/" target="_blank">Englander Institute for Precision Medicine</a>
+				</div>
+			</div>
+		</div>
+	</section> 
+	<!-- Section: Experience --> 
+	<section id="experience">
+		<div class="experience-container">
+         	<div class="head">
+         		<h3><span class="text-primary">Work Experience</span></h3>
+         	</div>
+         	<ul>
+         		<li>
+         			<div class="period">Summer 2020</div>
+         			<div class="company-role">
+         				<p class="company">Google</p>
+         				<p>STEP Intern</p>
+         			</div>
+         		</li>
+         		<li>
+         			<div class="period">Summer 2019</div>
+         			<div class="company-role">
+         				<p class="company">Weill Cornell Medicine: Englander Institute for Precision Medicine</p>
+         				<p>Software Development Intern</p>
+         			</div>
+         		</li>
+            	<li>
+              		<div class="period">Summer 2019</div>
+              		<div class="company-role">
+                     	<p class="company">ComzAfrica</p> 
+                  		<p>Research and Development Intern</p>
+                	</div>
+            	</li>
+            	<li>
+              		<div class="period">Summer 2018</div>
+              		<div class="company-role">
+                     	<p class="company">BKTechouse</p> 
+                  		<p>Software Development Intern</p>
+                	</div>
+            	</li>
+            	<li>
+              		<div class="period">Spring 2018</div>
+              		<div class="company-role">
+                     	<p class="company">SolarSPELL</p> 
+                  		<p>Research Intern</p>
+                	</div>
+            	</li>
+            </ul>
+        </div>
+	</section>
+	<!-- Section: Gallery -->
+	<section id="gallery">
+		<div class="cont">
+			<div class="gallery-container w-3 h-3">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/IMG-1944.jpg"></div>
+					<div class="text">South Carolina</div>
+				</div>
+			</div>
+			<div class="gallery-container w-2 h-3">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/IMG-2454.jpg"></div>
+					<div class="text">Ocean</div>
+				</div>
+			</div>
+			<div class="gallery-container h-5">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/yamoussoukro.JPG"></div>
+					<div class="text">The Basilica of Our Lady of Peace of Yamoussoukro</div>
+				</div>
+			</div>
+			<div class="gallery-container h">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/IMG-2293.jpg"></div>
+					<div class="text">Nature</div>
+				</div>
+			</div>
+			<div class="gallery-container w-2 h-2">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/IMG-2217.jpg"></div>
+					<div class="text">Sunshine</div>
+				</div>
+			</div>
+			<div class="gallery-container h-2">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/outside.JPG"></div>
+					<div class="text">Ivory Coast</div>
+				</div>
+			</div>
+			<div class="gallery-container h-2">
+				<div class="gallery-item">
+					<div class="image"> <img src="images/cathedral.JPG"></div>
+					<div class="text">Inside the Basilica</div>
+				</div>
+			</div>	
+		</div>
+	</section>
+	<!-- Section: Contact -->
+	<section id="contact" class="bg-light">
+		<div class="container">
+			<h2>Contact</h2>
+			<div class="form-container">
+				<div class="mail-icon"><i class="fas fa-envelope"></i></div>
+				<div class="form-box">
+					<h3>Email <span class="text-primary">Me</span></h3>
+					<form id="contact-form" action="https://formspree.io/mlepwaek" method="POST">
+						<div class="form-group">
+							<label for="first-name">First Name:</label>
+  							<input type="first-name" name="first-name" id="first-name" placeholder="Enter Your First Name">	
+						</div>
+						<div class="form-group">
+							<label for="last-name">Last Name:</label>
+  							<input type="last-name" name="last-name" id="last-name" placeholder="Enter Your Last Name">
+						</div>
+						<div class="form-group">
+							<label for="email">Email:</label>
+  							<input type="email" name="email" id="email-input" placeholder="Enter Your Email">
+						</div>
+						<div class="form-group">
+							<label for="message">Message:</label>
+  							<textarea rows="7" name="message" id="message-input" placeholder="Enter You Message"></textarea>
+						</div>
+  						<button id="button" class="contact-btn">Submit</button>
+  						<p id="my-form-status"></p>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Footer -->
+	<footer class="bg-dark">
+		<p>Deus Nsenga Portfolio 2020</p>
+	</footer>
+	<!-- Local JS File -->
+	<script src="script.js"></script>
+</body>
 </html>

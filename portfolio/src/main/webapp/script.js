@@ -1,32 +1,44 @@
+window.addEventListener("DOMContentLoaded", function() {
 
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-/**
- * Adds a random greeting to the page.
- */
-function addRandomImage() {
-    const pictures = ['9B9BC8F0-E900-4C97-9ED8-DE244974CE56.JPG', 'IMG-1944.jpg IMG-2293.jpg', 'IMG-0990.JPG', 'IMG-2029.jpg', 'IMG-7113.jpg', 'IMG-1926.jpg', 'IMG-2217.jpg', 'IMG-8551.jpg']
-  // Pick a random picture.
-    const picture = pictures[Math.floor(Math.random() * pictures.length)];
-
-  // Add it to the page.
-    const imageContainer = document.getElementById('image-container');
-    // greetingContainer.innerText = picture;
-
-    var img = imageContainer.querySelector('img')
-    img.src = 'images/IMG-2293.jpg'
-    //img.setAttribute('src', 'images/IMG-2293.jpg');
+    // get the form elements defined in your form HTML above
     
-}
+    var form = document.getElementById("contact-form");
+    var button = document.getElementById("button");
+    var status = document.getElementById("my-form-status");
+
+    // Success and Error functions for after the form is submitted
+    
+    function success() {
+      form.reset();
+      status.innerHTML = "Thanks! Message sent.";
+    }
+
+    function error() {
+      status.innerHTML = "Oops! There was a problem.";
+    }
+
+    // handle the form submission event
+
+    form.addEventListener("submit", function(e) {
+    	e.preventDefault();
+      	var data = new FormData(form);
+      	ajax(form.method, form.action, data, success, error);
+    });
+  });
+  
+  // helper function for sending an AJAX request
+
+  function ajax(method, url, data, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== XMLHttpRequest.DONE) return;
+      if (xhr.status === 200) {
+        success(xhr.response, xhr.responseType);
+      } else {
+        error(xhr.status, xhr.response, xhr.responseType);
+      }
+    };
+    xhr.send(data);
+ }

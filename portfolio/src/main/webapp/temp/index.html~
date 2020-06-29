@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'Home')" id="defaultOpen">Home</button>
+      <button class="tablinks" onclick="openTab(event, 'Gallery')">Gallery</button>
+      <button class="tablinks" onclick="openTab(event, 'About')">About Me</button>
+      <button class="tablinks" onclick="openTab(event, 'Social')">Social Media</button>
+    </div>
+    
+    <!-- Tab content -->
+    <div id="Home" class="tabcontent">
+      <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+      <h3>Home</h3>
+      <p>Welcome..</p>
+    </div>
+
+    <div id="Gallery" class="tabcontent">
+      <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+      <h3>Gallery</h3>
+      <p>My pictures.</p>
+    </div>
+    
+    <div id="About" class="tabcontent">
+      <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+      <h3>About Me</h3>
+      <p>Get to know me.</p>
+    </div>
+
+    <div id="Social" class="tabcontent">
+      <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+      <h3>Social Media</h3>
+      <p>Follow me.</p>
+    </div>
