@@ -6,6 +6,16 @@
 	list-style: none;
 }
 
+@viewport {
+    zoom: 1.0;
+    width: extend-to-zoom;
+}
+
+@-ms-viewport {
+    zoom: 1.0;
+    width: extend-to-zoom;
+}
+
 html {
 	scroll-behavior: smooth;
 }
@@ -79,7 +89,7 @@ body {
 /* welcome-page Area */
 #welcome-page {
 	background: url(images/IMG-0990.JPG) no-repeat center center/cover;
-	height: 91.7vh;
+	height: 90.7vh;
 }
 
 .welcome-page-content {
@@ -125,10 +135,10 @@ body {
 
 
 .socials {
-	position: absolute;
-	top: 80%;
+	position: relative;
+	top: 40%;
 	left: 50%;
-	transform: translate(-53%, -50%);
+	transform: translate(-50%, -50%);
 	display: flex;
 
 }
