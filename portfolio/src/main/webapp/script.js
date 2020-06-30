@@ -42,3 +42,9 @@ window.addEventListener("DOMContentLoaded", function() {
     };
     xhr.send(data);
  }
+
+ function getGreeting() {
+  fetch('/data').then(response => response.text()).then((greeting) => {
+    document.getElementById('greeting-placehold').innerText = greeting;
+  });
+}
