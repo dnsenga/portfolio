@@ -417,7 +417,10 @@ body {
 .h-8{
     grid-row: span 6;
 }
-
+/* Section: Comments */
+#comments {
+    height: 100vh;
+}
 
 /* Section; Contact */
 

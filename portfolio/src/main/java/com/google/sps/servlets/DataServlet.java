@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import java.util.ArrayList;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +24,31 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
+  ArrayList<String> myComments = new ArrayList<String>(){
+        {
+            add("Deus is hardworking.");
+            add("Deus is committed.");
+            add("Deus is creative.");
+        }
+    };
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("Hello Deus ");
+    // Convert the server stats to JSON
+    String json = convertToJson(myComments);
+    // Send the JSON as the response
+    response.getWriter().println(json);
+  }
+
+  /**
+   * Converts a ServerStats instance into a JSON string using the Gson library. Note: We first added
+   * the Gson library dependency to pom.xml.
+   */
+  private String convertToJson(ArrayList<String> myComments) {
+    String json = "[";
+    for (int i = 0; i < myComments.size(); i++){
+        json += "{\"comment\": \"" + myComments.get(i) + "\"}, ";
+    }
+    json += "]";
+    return json;
   }
 }
