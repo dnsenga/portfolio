@@ -33,10 +33,21 @@ public class DataServlet extends HttpServlet {
     };
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.setContentType("application/json");
     // Convert the server stats to JSON
     String json = convertToJson(myComments);
     // Send the JSON as the response
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String newComment =  request.getParameter("comment-input");
+    // Append the new comment to our array list
+    myComments.add(newComment);
+    // Redirect back to the HTML page.
+    response.sendRedirect("/index.html");
   }
 
   /**
@@ -44,11 +55,14 @@ public class DataServlet extends HttpServlet {
    * the Gson library dependency to pom.xml.
    */
   private String convertToJson(ArrayList<String> myComments) {
+      System.out.println(myComments);
     String json = "[";
     for (int i = 0; i < myComments.size(); i++){
         json += "{\"comment\": \"" + myComments.get(i) + "\"}, ";
     }
+    json = json.substring(0, json.length() - 2);
     json += "]";
+    System.out.println(json);
     return json;
   }
 }

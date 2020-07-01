@@ -156,7 +156,17 @@
     <!-- Section: Comments -->
     <section id="comments" class="bg-light">
         <div class="container">
-           <h2> <span class="text-primary" id="comments-placeholder"></span> </h2>
+            <ul>
+                <h2> <span class="text-primary" id="comments-placeholder"></span> </h2>
+            </ul>
+           <br/><br/>
+           <form action="/data" method="POST">
+                <p>Enter a comment: </p>
+                <textarea name="comment-input"></textarea>
+                <br/><br/>
+                <input type="submit" />
+           </form>
+           <br/><br/>
         </div>
     </section>
 	<!-- Section: Contact -->

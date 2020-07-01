@@ -44,8 +44,18 @@ window.addEventListener("DOMContentLoaded", function() {
  }
 
  function getComments() {
-  fetch('/data').then(response => response.text()).then((comments) => {
-    document.getElementById('comments-placeholder').innerText = comments;
-    console.log(comments);
+  fetch('/data').then(response => response.json()).then((comments) => {
+    // Build the list of comments.
+    const commentsEl = document.getElementById('comments-placeholder');
+    comments.forEach((line) => {
+      commentsEl.appendChild(createListElement(line.comment));
+    });
   });
+}
+
+/** Creates an <li> element containing a comment. */
+function createListElement(comment) {
+  const liElement = document.createElement('li');
+  liElement.innerText = comment;
+  return liElement;
 }
