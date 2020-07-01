@@ -47,15 +47,27 @@ window.addEventListener("DOMContentLoaded", function() {
   fetch('/data').then(response => response.json()).then((comments) => {
     // Build the list of comments.
     const commentsEl = document.getElementById('comments-placeholder');
-    comments.forEach((line) => {
-      commentsEl.appendChild(createListElement(line.comment));
+    comments.forEach((comment) => {
+      commentsEl.appendChild(createCommentElement(comment));
     });
   });
 }
 
 /** Creates an <li> element containing a comment. */
-function createListElement(comment) {
-  const liElement = document.createElement('li');
-  liElement.innerText = comment;
-  return liElement;
+function createCommentElement(comment) {
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const timeElement = document.createElement('span');
+  timeElement.innerText = comment.timestamp;
+  const nameElement = document.createElement('span');
+  nameElement.innerText = comment.name;
+  const commentTextElement = document.createElement('span');
+  commentTextElement.innerText = comment.comment;
+
+  commentElement.appendChild(timeElement);
+  commentElement.appendChild(nameElement);
+  commentElement.appendChild(commentTextElement);
+
+  return commentElement;
 }
