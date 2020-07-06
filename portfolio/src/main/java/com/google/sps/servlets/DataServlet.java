@@ -31,10 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
+  int numberOfCommentsToDisplay = 5;
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.print("INSIDE THE DOGET FUNCTION");
+    System.out.println("INSIDE THE DO GET FUNCTION");
+    System.out.println(numberOfCommentsToDisplay);
     Query query = new Query("entityComment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -54,31 +55,40 @@ public class DataServlet extends HttpServlet {
 
     response.setContentType("application/json");
     // Convert the server stats to JSON
-    String json = convertToJson(comments);
+    String json = "";
+    if (comments.size() > 0) {
+        json = convertToJson(comments.subList(0, numberOfCommentsToDisplay));
+    }
+    
     // Send the JSON as the response
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.print("INSIDE THE DOPOST FUNCTION");
+    System.out.println("INSIDE THE DO POST FUNCTION");
+    numberOfCommentsToDisplay = getUserChoice(request);
+    System.out.println("USER CHOICE IS: " + numberOfCommentsToDisplay);
     String name = request.getParameter("name-input");
     String newComment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
 
-    Entity commentEntity = new Entity("entityComment");
-    commentEntity.setProperty("name", name);
-    commentEntity.setProperty("comment", newComment);
-    commentEntity.setProperty("timestamp", timestamp);
+    if (newComment != null){
+      Entity commentEntity = new Entity("entityComment");
+      commentEntity.setProperty("name", name);
+      commentEntity.setProperty("comment", newComment);
+      commentEntity.setProperty("timestamp", timestamp);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+    }
+
     
     // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect("index.html");
   }
 
-  /**
+  /**S
    * Converts a ServerStats instance into a JSON string using the Gson library. Note: We first added
    * the Gson library dependency to pom.xml.
    */
@@ -94,5 +104,28 @@ public class DataServlet extends HttpServlet {
     json += "]";
     System.out.println(json);
     return json;
+  }
+
+  /** Returns the choice entered by the user, or -1 if the choice was invalid. */
+  private int getUserChoice(HttpServletRequest request) {
+    // Get the input from the form.
+    String userChoiceString = request.getParameter("number-of-comments");
+
+    // Convert the input to an int.
+    int userChoice;
+    try {
+      userChoice = Integer.parseInt(userChoiceString);
+    } catch (NumberFormatException e) {
+      System.err.println("Could not convert to int: " + userChoiceString);
+      return 5;
+    }
+
+    // Check that the input is between 1 and 3.
+    if (userChoice < 1 || userChoice > 20) {
+      System.err.println("Player choice is out of range: " + userChoiceString);
+      return 5;
+    }
+
+    return userChoice;
   }
 }

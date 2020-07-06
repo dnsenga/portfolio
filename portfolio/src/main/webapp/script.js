@@ -45,12 +45,25 @@ window.addEventListener("DOMContentLoaded", function() {
 
  function getComments() {
   fetch('/data').then(response => response.json()).then((comments) => {
+    // clear out the existing comments
+    const currentCommentSection = document.getElementById('comments-placeholder');
+    while( currentCommentSection.firstChild ){
+        currentCommentSection.removeChild( currentCommentSection.firstChild );
+    }
     // Build the list of comments.
+    var numOfComments = 0;
     const commentsEl = document.getElementById('comments-placeholder');
     comments.forEach((comment) => {
+        numOfComments ++;
       commentsEl.appendChild(createCommentElement(comment));
     });
+    const numberOfCommentSection = document.getElementById('comments-num');
+    numberOfCommentSection.value = numOfComments;
   });
+}
+
+ function deleteComments() {
+  fetch('/delete-data').then(getComments());
 }
 
 /** Creates an <li> element containing a comment. */

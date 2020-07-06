@@ -156,16 +156,28 @@
     <!-- Section: Comments -->
     <section id="comments" class="bg-light">
         <div class="container">
-            <ul>
-                <h2> <span class="text-primary" id="comments-placeholder"></span> </h2>
-            </ul>
+            <h2>
+                <span class="text-primary">
+                    <ul id="comments-placeholder">
+                    </ul>
+                </span> 
+            </h2>
+            <form action="/delete-data" method="POST">
+                <input type="submit" name="delete-comments" value="Delete Comments" />
+            </form>
            <br/><br/>
+           <form action="/data" method="POST">
+               <p>Please Enter how many comments you wish to view (max=20).</p>
+               <input type="number" name="number-of-comments" id='comments-num' min="1" max="20" value="5">
+               <input type="submit" />
+           </form>
+           <br></br>
            <form action="/data" method="POST">
                 <p>Enter your name: </p>
                 <textarea name="name-input"></textarea>
                 <br/><br/>
                 <p>Enter your comment: </p>
-                <textarea name="comment-input"></textarea>
+                <textarea name="comment-input" pattern="[A-Za-z0-9]{1,20}"></textarea>
                 <br/><br/>
                 <input type="submit" />
            </form>
