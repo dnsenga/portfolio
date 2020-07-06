@@ -15,6 +15,7 @@ package com.google.sps.servlets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -22,21 +23,20 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.sps.data.Comment;
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that handles comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   int numberOfCommentsToDisplay = 5;
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("INSIDE THE DO GET FUNCTION");
-    System.out.println(numberOfCommentsToDisplay);
-    Query query = new Query("entityComment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -47,18 +47,17 @@ public class DataServlet extends HttpServlet {
       String name = (String) entity.getProperty("name");
       String commentText = (String) entity.getProperty("comment");
       long timestamp = (long) entity.getProperty("timestamp");
-      System.out.println(id + "\t" + name + "\t" +  commentText + "\t" + timestamp);
 
       Comment comment = new Comment(id, name, commentText, timestamp);
       comments.add(comment);
     }
+    // Shuffle the comments
+    Collections.shuffle(comments);
 
     response.setContentType("application/json");
     // Convert the server stats to JSON
-    String json = "";
-    if (comments.size() > 0) {
-        json = convertToJson(comments.subList(0, numberOfCommentsToDisplay));
-    }
+    Gson gson = new Gson();
+    String json = gson.toJson(comments.subList(0, Math.min(numberOfCommentsToDisplay, comments.size())));
     
     // Send the JSON as the response
     response.getWriter().println(json);
@@ -66,15 +65,13 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("INSIDE THE DO POST FUNCTION");
     numberOfCommentsToDisplay = getUserChoice(request);
-    System.out.println("USER CHOICE IS: " + numberOfCommentsToDisplay);
     String name = request.getParameter("name-input");
     String newComment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
 
     if (newComment != null){
-      Entity commentEntity = new Entity("entityComment");
+      Entity commentEntity = new Entity("commentEntity");
       commentEntity.setProperty("name", name);
       commentEntity.setProperty("comment", newComment);
       commentEntity.setProperty("timestamp", timestamp);
@@ -88,25 +85,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("index.html");
   }
 
-  /**S
-   * Converts a ServerStats instance into a JSON string using the Gson library. Note: We first added
-   * the Gson library dependency to pom.xml.
-   */
-  private String convertToJson(List<Comment> comments) {
-      System.out.println(comments);
-    String json = "[";
-    for (int i = 0; i < comments.size(); i++){
-        json += "{\"time\": \"" + comments.get(i).timestamp + "\", ";
-        json += "\"name\": \"" + comments.get(i).name + "\", ";
-        json += "\"comment\": \"" + comments.get(i).comment + "\"}, ";
-    }
-    json = json.substring(0, json.length() - 2);
-    json += "]";
-    System.out.println(json);
-    return json;
-  }
-
-  /** Returns the choice entered by the user, or -1 if the choice was invalid. */
+  /** Returns the choice entered by the user, or 5 if the choice was invalid. */
   private int getUserChoice(HttpServletRequest request) {
     // Get the input from the form.
     String userChoiceString = request.getParameter("number-of-comments");
@@ -116,13 +95,11 @@ public class DataServlet extends HttpServlet {
     try {
       userChoice = Integer.parseInt(userChoiceString);
     } catch (NumberFormatException e) {
-      System.err.println("Could not convert to int: " + userChoiceString);
       return 5;
     }
 
-    // Check that the input is between 1 and 3.
+    // Check that the input is between 1 and 20.
     if (userChoice < 1 || userChoice > 20) {
-      System.err.println("Player choice is out of range: " + userChoiceString);
       return 5;
     }
 
