@@ -43,8 +43,44 @@ window.addEventListener("DOMContentLoaded", function() {
     xhr.send(data);
  }
 
- function getGreeting() {
-  fetch('/data').then(response => response.text()).then((greeting) => {
-    document.getElementById('greeting-placehold').innerText = greeting;
+ function getComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    // clear out the existing comments
+    const currentCommentSection = document.getElementById('comments-placeholder');
+    while( currentCommentSection.firstChild ){
+        currentCommentSection.removeChild( currentCommentSection.firstChild );
+    }
+    // Build the list of comments.
+    var numOfComments = 0;
+    const commentsEl = document.getElementById('comments-placeholder');
+    comments.forEach((comment) => {
+        numOfComments ++;
+      commentsEl.appendChild(createCommentElement(comment));
+    });
+    const numberOfCommentSection = document.getElementById('comments-num');
+    numberOfCommentSection.value = numOfComments;
   });
+}
+
+ function deleteComments() {
+  fetch('/delete-data').then(getComments());
+}
+
+/** Creates an <li> element containing a comment. */
+function createCommentElement(comment) {
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const timeElement = document.createElement('span');
+  timeElement.innerText = comment.timestamp;
+  const nameElement = document.createElement('span');
+  nameElement.innerText = comment.name;
+  const commentTextElement = document.createElement('span');
+  commentTextElement.innerText = comment.comment;
+
+  commentElement.appendChild(timeElement);
+  commentElement.appendChild(nameElement);
+  commentElement.appendChild(commentTextElement);
+
+  return commentElement;
 }
