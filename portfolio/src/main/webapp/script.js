@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", function() {
     function success() {
       form.reset();
       status.innerHTML = "Thanks! Message sent.";
+
     }
 
     function error() {
@@ -77,10 +78,13 @@ function createCommentElement(comment) {
   nameElement.innerText = comment.name;
   const commentTextElement = document.createElement('span');
   commentTextElement.innerText = comment.comment;
+  const commentSentimentElement = document.createElement('span');
+  commentSentimentElement.innerText = comment.commentSentiment;
 
   commentElement.appendChild(timeElement);
   commentElement.appendChild(nameElement);
   commentElement.appendChild(commentTextElement);
+  commentElement.appendChild(commentSentimentElement);
 
   return commentElement;
 }

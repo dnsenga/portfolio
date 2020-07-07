@@ -16,15 +16,21 @@ package com.google.sps.servlets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Comment;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +40,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   int numberOfCommentsToDisplay = 5;
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    PrintWriter out = response.getWriter();
+    // Only logged-in users can see the website
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      String loginUrl = userService.createLoginURL("/index.html");
+      out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+    }
+
     Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -45,10 +60,12 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
+      String email = (String) entity.getProperty("email");
       String commentText = (String) entity.getProperty("comment");
+      float sentimentScore = (float) entity.getProperty("sentimentScore");
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, name, commentText, timestamp);
+      Comment comment = new Comment(id, name, email, commentText, sentimentScore, timestamp);
       comments.add(comment);
     }
     // Shuffle the comments
@@ -65,15 +82,36 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+
+    // Only logged-in users can post comments
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/index.html");
+      return;
+    }
+
     numberOfCommentsToDisplay = getUserChoice(request);
     String name = request.getParameter("name-input");
     String newComment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
 
     if (newComment != null){
+      // calculate sentiment
+      Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
+      LanguageServiceClient languageService = LanguageServiceClient.create();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+      float sentimentScore = sentiment.getScore();
+      languageService.close();
+
+      // Get the email
+      String email = userService.getCurrentUser().getEmail();
+
+      // add comment
       Entity commentEntity = new Entity("commentEntity");
       commentEntity.setProperty("name", name);
+      commentEntity.setProperty("email", email);
       commentEntity.setProperty("comment", newComment);
+      commentEntity.setProperty("sentimentScore", sentimentScore);
       commentEntity.setProperty("timestamp", timestamp);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -82,7 +120,7 @@ public class DataServlet extends HttpServlet {
 
     
     // Redirect back to the HTML page.
-    response.sendRedirect("index.html");
+    response.sendRedirect("/index.html");
   }
 
   /** Returns the choice entered by the user, or 5 if the choice was invalid. */
