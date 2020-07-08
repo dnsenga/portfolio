@@ -35,8 +35,7 @@ public class DeleteDataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("INSIDE THE DELETE FUNCTION");
-    Query query = new Query("entityComment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -47,6 +46,6 @@ public class DeleteDataServlet extends HttpServlet {
     }
 
     // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect("index.html");
   }
 }

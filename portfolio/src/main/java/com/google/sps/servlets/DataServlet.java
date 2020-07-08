@@ -43,14 +43,6 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PrintWriter out = response.getWriter();
-    // Only logged-in users can see the website
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      String loginUrl = userService.createLoginURL("/index.html");
-      out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
-    }
-
     Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -60,12 +52,12 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
-      String email = (String) entity.getProperty("email");
       String commentText = (String) entity.getProperty("comment");
-      float sentimentScore = (float) entity.getProperty("sentimentScore");
+      String sentimentScore = String.valueOf(entity.getProperty("sentimentScore"));
+      sentimentScore = sentimentScore.substring(0,Math.min(4,sentimentScore.length()));
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, name, email, commentText, sentimentScore, timestamp);
+      Comment comment = new Comment(id, name, commentText, sentimentScore, timestamp);
       comments.add(comment);
     }
     // Shuffle the comments
@@ -75,21 +67,13 @@ public class DataServlet extends HttpServlet {
     // Convert the server stats to JSON
     Gson gson = new Gson();
     String json = gson.toJson(comments.subList(0, Math.min(numberOfCommentsToDisplay, comments.size())));
-    
+
     // Send the JSON as the response
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-
-    // Only logged-in users can post comments
-    if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
-      return;
-    }
-
     numberOfCommentsToDisplay = getUserChoice(request);
     String name = request.getParameter("name-input");
     String newComment = request.getParameter("comment-input");
@@ -100,16 +84,13 @@ public class DataServlet extends HttpServlet {
       Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
       LanguageServiceClient languageService = LanguageServiceClient.create();
       Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-      float sentimentScore = sentiment.getScore();
+      float sentimentScoreFloat = sentiment.getScore();
       languageService.close();
-
-      // Get the email
-      String email = userService.getCurrentUser().getEmail();
+      String sentimentScore =String.valueOf(sentimentScoreFloat);
 
       // add comment
       Entity commentEntity = new Entity("commentEntity");
       commentEntity.setProperty("name", name);
-      commentEntity.setProperty("email", email);
       commentEntity.setProperty("comment", newComment);
       commentEntity.setProperty("sentimentScore", sentimentScore);
       commentEntity.setProperty("timestamp", timestamp);
@@ -117,10 +98,8 @@ public class DataServlet extends HttpServlet {
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
-
-    
     // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect("index.html");
   }
 
   /** Returns the choice entered by the user, or 5 if the choice was invalid. */
