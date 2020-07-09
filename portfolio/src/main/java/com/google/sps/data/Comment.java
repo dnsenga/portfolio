@@ -24,6 +24,5 @@ public final class Comment {
     Date dateTime = new Date(timestamp);
     DateFormat df = new SimpleDateFormat("dd:MM:yy:HH:mm:ss");
     this.convertedTime = df.format(dateTime);
-
   }
 }

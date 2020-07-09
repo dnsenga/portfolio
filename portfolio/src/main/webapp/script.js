@@ -43,11 +43,15 @@ window.addEventListener("DOMContentLoaded", function() {
     };
     xhr.send(data);
  }
+ function checkUser(){
+  fetch('/log-in-out').then(response => response.text()).then(html => {
+    const linkEl = document.getElementById("log-in-out");
+    linkEl.innerHTML = html;
+     });
+ }
 
  function getComments() {
-   //fetch('/data').then(response => {
-    //console.log(response);
-    //var comments = response.json();
+  checkUser();
   fetch('/data').then(response => response.json()).then((comments) => {
     // clear out the existing comments
     const currentCommentSection = document.getElementById('comments-placeholder');
