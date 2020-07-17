@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 package com.google.sps;
  
 import java.util.ArrayList;
@@ -32,51 +32,55 @@ public final class FindMeetingQuery {
         return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
-    Collection<TimeRange> results = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> timeSlots = new ArrayList<TimeRange>();
+    Collection<TimeRange> timeSlotsWithOptionalAttendees = new ArrayList<TimeRange>();
     // Find event that are attended by at least one of our people
     Collection<String> attendees = request.getAttendees();
     Collection<String> optionalAttendees = request.getOptionalAttendees();
     
-    Collection<Event> relevantEvents = new HashSet<>();
     Collection<Event> relevantEventsForMandatoryAttendees = new HashSet<>();
+    Collection<Event> relevantEventsForOptionalAttendees = new HashSet<>();
 
     for (Event e : events) {
       if (!Collections.disjoint(e.getAttendees(), attendees)) {
-          relevantEvents.add(e);
           relevantEventsForMandatoryAttendees.add(e);  
       }
       else if (!Collections.disjoint(e.getAttendees(), optionalAttendees)) {
-          relevantEvents.add(e);
+          relevantEventsForOptionalAttendees.add(e);
       }
     }
 
-    if (relevantEvents.size() == 0){
+
+    if (relevantEventsForMandatoryAttendees.size() == 0 && relevantEventsForOptionalAttendees.size() == 0){
         return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
-    ArrayList<TimeRange> relevantEventsTimeRange = new ArrayList<TimeRange>();
+    //ArrayList<TimeRange> relevantEventsTimeRange = new ArrayList<TimeRange>();
     ArrayList<TimeRange> relevantEventsForMandatoryAttendeesTimeRange = new ArrayList<TimeRange>();
-    for (Event e: relevantEvents){
-        relevantEventsTimeRange.add(e.getWhen());
-    }
-
+    ArrayList<TimeRange> relevantEventsForOptionalAttendeesTimeRange = new ArrayList<TimeRange>();
     for (Event e: relevantEventsForMandatoryAttendees){
         relevantEventsForMandatoryAttendeesTimeRange.add(e.getWhen());
     }
 
-    results = queryHelper(relevantEventsTimeRange, request.getDuration());
+    for (Event e: relevantEventsForOptionalAttendees){
+        relevantEventsForOptionalAttendeesTimeRange.add(e.getWhen());
+    }
 
-    if (results.size() != 0) return results;
+    //return queryOptional(relevantEventsForMandatoryAttendeesTimeRange, relevantEventsForOptionalAttendeesTimeRange, request.getDuration());
 
-    return queryHelper(relevantEventsForMandatoryAttendeesTimeRange, request.getDuration());
-
-
+   timeSlots = queryHelper(relevantEventsForMandatoryAttendeesTimeRange, request.getDuration());
+   if (optionalAttendees.size() != 0){
+    timeSlotsWithOptionalAttendees = queryOptional(relevantEventsForOptionalAttendeesTimeRange, timeSlots, request.getDuration());
+    if (timeSlotsWithOptionalAttendees.size() != 0) return timeSlotsWithOptionalAttendees;
+   }
     
+    return timeSlots;
   }
 
-  private Collection<TimeRange> queryHelper(ArrayList<TimeRange> relevantEventsTimeRange, long meetingDuration) {
+  // return free time ranges for all the mandatory attendees
+  private ArrayList<TimeRange> queryHelper(ArrayList<TimeRange> relevantEventsTimeRange, long meetingDuration) {
 
-    Collection<TimeRange> results = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> results = new ArrayList<TimeRange>();
 
 
     Collections.sort(relevantEventsTimeRange, TimeRange.ORDER_BY_START);
@@ -106,5 +110,50 @@ public final class FindMeetingQuery {
     }
 
     return results;
+  } 
+
+ // return free time ranges for mandatory and optional attendees if any
+ private Collection<TimeRange> queryOptional(ArrayList<TimeRange> relevantEventsForOptionalAttendeesTimeRange, ArrayList<TimeRange> timeSlots, long meetingDuration) {
+
+    Collection<TimeRange> timeSlotsWithOptionalAttendees = new ArrayList<TimeRange>();
+
+    if (timeSlots.size() == 0) return timeSlotsWithOptionalAttendees;
+    
+    Collections.sort(relevantEventsForOptionalAttendeesTimeRange, TimeRange.ORDER_BY_START);
+
+    int i = 0;
+    int j = 0;
+    int start = 0;
+    int end = relevantEventsForOptionalAttendeesTimeRange.get(0).start();
+
+
+    while (true){
+      if (j == timeSlots.size()) break;
+    
+      TimeRange tempTR = TimeRange.fromStartEnd(start, end, false);
+      if (tempTR.contains(timeSlots.get(j))) timeSlotsWithOptionalAttendees.add(timeSlots.get(j));
+      else if (timeSlots.get(j).contains(tempTR) && tempTR.duration() >= meetingDuration) timeSlotsWithOptionalAttendees.add(tempTR);
+      else {
+          TimeRange intersectionTR = TimeRange.fromStartEnd(Math.max(start, timeSlots.get(j).start()), Math.min(end, timeSlots.get(j).end()), false);
+          if (intersectionTR.duration() >= meetingDuration) timeSlotsWithOptionalAttendees.add(intersectionTR);
+      }
+
+      if (i == relevantEventsForOptionalAttendeesTimeRange.size()) break;
+
+
+      if (timeSlots.get(j).end() <= relevantEventsForOptionalAttendeesTimeRange.get(i).end() || end == TimeRange.END_OF_DAY + 1){
+        j++;
+      }
+      else if (timeSlots.get(j).end() >= relevantEventsForOptionalAttendeesTimeRange.get(i).end()){
+        start = relevantEventsForOptionalAttendeesTimeRange.get(i).end();
+        if (i+1 == relevantEventsForOptionalAttendeesTimeRange.size()) end = TimeRange.END_OF_DAY + 1;
+        else {
+            end = relevantEventsForOptionalAttendeesTimeRange.get(i+1).start();
+            i++;
+        }
+      }
+
+    }
+    return timeSlotsWithOptionalAttendees;
   }
 }

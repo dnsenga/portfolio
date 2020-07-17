@@ -72,7 +72,7 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
 
     Assert.assertEquals(expected, actual);
-  }
+  } 
 
   @Test
   public void noOptionsForTooLongOfARequest() {
@@ -99,7 +99,7 @@ public final class FindMeetingQueryTest {
         Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true));
 
-    Assert.assertEquals(expected, actual);
+    Assert.assertEquals(expected, actual); 
   }
 
   @Test
@@ -277,7 +277,7 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> expected = Arrays.asList();
 
     Assert.assertEquals(expected, actual);
-  }
+  } 
 
   @Test
   public void everyAttendeeIsConsideredOptionalAttendeeNotFree() {
@@ -337,7 +337,6 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
-
   @Test
   public void justEnoughRoomOptionalAttendeeNotFree() {
     // Have a mandatory and an optional attendee without common free time
@@ -364,6 +363,7 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
+
 
   @Test
   public void optionalAttendeeMultipleGaps() {
@@ -398,7 +398,6 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
-
   @Test
   public void optionalAttendeeNoGaps() {
     // Have two optional attendess with no free time
@@ -418,6 +417,26 @@ public final class FindMeetingQueryTest {
         new MeetingRequest(NO_ATTENDEES, DURATION_30_MINUTES);
     request.addOptionalAttendee(PERSON_A);
     request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
+    Assert.assertEquals(expected, actual);
+  }
+  @Test
+  public void justOneOptionalAttendeeNoGaps() {
+    // Have two optional attendess with no free time
+    //
+    // Events  : |--------------A--------------|
+    // Day     : |-----------------------------|
+    // Options : |-----------------------------|
+
+    Collection<Event> events = Arrays.asList(
+        new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_A)));
+
+    MeetingRequest request =
+        new MeetingRequest(NO_ATTENDEES, DURATION_30_MINUTES);
+    request.addOptionalAttendee(PERSON_A);
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
