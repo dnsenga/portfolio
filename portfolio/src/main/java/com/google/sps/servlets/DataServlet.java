@@ -1,9 +1,9 @@
 // Copyright 2019 Google LLC
-//
+// 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 //     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -52,12 +52,13 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
+      String email = (String) entity.getProperty("email");
       String commentText = (String) entity.getProperty("comment");
       String sentimentScore = String.valueOf(entity.getProperty("sentimentScore"));
       sentimentScore = sentimentScore.substring(0,Math.min(4,sentimentScore.length()));
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, name, commentText, sentimentScore, timestamp);
+      Comment comment = new Comment(id, name, email, commentText, sentimentScore, timestamp);
       comments.add(comment);
     }
     // Shuffle the comments
@@ -79,6 +80,10 @@ public class DataServlet extends HttpServlet {
     String newComment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
 
+    // Get current user email
+    UserService userService = UserServiceFactory.getUserService();
+    String email = userService.getCurrentUser().getEmail();
+
     if (newComment != null){
       // calculate sentiment
       Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
@@ -91,6 +96,7 @@ public class DataServlet extends HttpServlet {
       // add comment
       Entity commentEntity = new Entity("commentEntity");
       commentEntity.setProperty("name", name);
+      commentEntity.setProperty("email", email);
       commentEntity.setProperty("comment", newComment);
       commentEntity.setProperty("sentimentScore", sentimentScore);
       commentEntity.setProperty("timestamp", timestamp);
@@ -116,7 +122,7 @@ public class DataServlet extends HttpServlet {
     }
 
     // Check that the input is between 1 and 20.
-    if (userChoice < 1 || userChoice > 20) {
+    if (userChoice < 1 || userChoice > 10) {
       return 5;
     }
 
