@@ -16,15 +16,21 @@ package com.google.sps.servlets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Comment;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   int numberOfCommentsToDisplay = 5;
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
@@ -46,9 +53,11 @@ public class DataServlet extends HttpServlet {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
       String commentText = (String) entity.getProperty("comment");
+      String sentimentScore = String.valueOf(entity.getProperty("sentimentScore"));
+      sentimentScore = sentimentScore.substring(0,Math.min(4,sentimentScore.length()));
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, name, commentText, timestamp);
+      Comment comment = new Comment(id, name, commentText, sentimentScore, timestamp);
       comments.add(comment);
     }
     // Shuffle the comments
@@ -58,7 +67,7 @@ public class DataServlet extends HttpServlet {
     // Convert the server stats to JSON
     Gson gson = new Gson();
     String json = gson.toJson(comments.subList(0, Math.min(numberOfCommentsToDisplay, comments.size())));
-    
+
     // Send the JSON as the response
     response.getWriter().println(json);
   }
@@ -71,16 +80,24 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     if (newComment != null){
+      // calculate sentiment
+      Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
+      LanguageServiceClient languageService = LanguageServiceClient.create();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+      float sentimentScoreFloat = sentiment.getScore();
+      languageService.close();
+      String sentimentScore =String.valueOf(sentimentScoreFloat);
+
+      // add comment
       Entity commentEntity = new Entity("commentEntity");
       commentEntity.setProperty("name", name);
       commentEntity.setProperty("comment", newComment);
+      commentEntity.setProperty("sentimentScore", sentimentScore);
       commentEntity.setProperty("timestamp", timestamp);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
     }
-
-    
     // Redirect back to the HTML page.
     response.sendRedirect("index.html");
   }

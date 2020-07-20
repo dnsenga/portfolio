@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", function() {
     function success() {
       form.reset();
       status.innerHTML = "Thanks! Message sent.";
+
     }
 
     function error() {
@@ -42,8 +43,15 @@ window.addEventListener("DOMContentLoaded", function() {
     };
     xhr.send(data);
  }
+ function checkUser(){
+  fetch('/log-in-out').then(response => response.text()).then(html => {
+    const linkEl = document.getElementById("log-in-out");
+    linkEl.innerHTML = html;
+     });
+ }
 
  function getComments() {
+  checkUser();
   fetch('/data').then(response => response.json()).then((comments) => {
     // clear out the existing comments
     const currentCommentSection = document.getElementById('comments-placeholder');
@@ -72,15 +80,18 @@ function createCommentElement(comment) {
   commentElement.className = 'comment';
 
   const timeElement = document.createElement('span');
-  timeElement.innerText = comment.timestamp;
+  timeElement.innerText = comment.convertedTime + "\t";
   const nameElement = document.createElement('span');
-  nameElement.innerText = comment.name;
+  nameElement.innerText = comment.name + ": \t";
   const commentTextElement = document.createElement('span');
-  commentTextElement.innerText = comment.comment;
+  commentTextElement.innerText = comment.comment + "\t";
+  const commentSentimentElement = document.createElement('span');
+  commentSentimentElement.innerText = comment.sentimentScore ;
 
   commentElement.appendChild(timeElement);
   commentElement.appendChild(nameElement);
   commentElement.appendChild(commentTextElement);
+  commentElement.appendChild(commentSentimentElement);
 
   return commentElement;
 }
