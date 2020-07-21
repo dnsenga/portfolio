@@ -5,12 +5,12 @@
 	box-sizing: border-box;
 	list-style: none;
 }
-
+ 
 @viewport {
     zoom: 1.0;
     width: extend-to-zoom;
 }
-
+ 
 @-ms-viewport {
     zoom: 1.0;
     width: extend-to-zoom;
@@ -171,7 +171,7 @@ body {
 	padding: 5rem 0;
 }
 
-#about h2, #experience h2 {
+#about h2,  #comments h2{
 	text-align: center;
 	font-size: 3rem;
 	margin-bottom: 3rem;
@@ -318,8 +318,8 @@ body {
 
 .cont{
     display:grid;
-    grid-template-columns: repeat(6,1fr);
-    grid-auto-rows:100px 300px;
+    grid-template-columns: repeat(8,1fr);
+    grid-auto-rows:100px 100px;
     grid-gap:10px;
     grid-auto-flow: dense;
 }
@@ -387,10 +387,10 @@ body {
     grid-column: span 6;
 }
 .w-7{
-    grid-column: span 6;
+    grid-column: span 7;
 }
 .w-8{
-    grid-column: span 6;
+    grid-column: span 8;
 }
 
 .h-1{
@@ -412,14 +412,86 @@ body {
     grid-row: span 6;
 }
 .h-7{
-    grid-row: span 6;
+    grid-row: span 7;
 }
 .h-8{
-    grid-row: span 6;
+    grid-row: span 8;
 }
 /* Section: Comments */
 #comments {
     height: 100vh;
+    padding: 5rem 0;
+}
+
+#comments .comment-primary{
+    display: flex;
+    flex-direction: column;
+}
+
+#comments .comment {
+    background: #fff;
+    padding: 2 rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 2px 4px #d1d1d1; 
+    border-radius: 15px;
+    position: relative;
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.send-comment-container {
+    background: #fff;
+	padding: 3rem;
+	width: 80%;
+	box-shadow: 2px 2px 5px #d1d1d1;
+	border-radius: 10px;
+    font-family: Arial, sans-seriff;
+    position: relative;
+}
+
+.send-comment-container h2 {
+    text-align: center;
+    margin-bottom: 8rem;
+    margin: 3rem 0;
+	margin-top: 5rem;
+}
+
+.send-comment-container textarea {
+    height: 20px;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #aaa;
+    background-color: transparent;
+    margin-bottom: 10px;
+    resize: none;
+    outline: none;
+    transition: .5s;
+}
+
+.send-comment-container input[type="submit"], button {
+    padding: 10px 15px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.send-comment-container input[type="submit"]:hover{
+	background: #66fcf1;
+}
+
+.send-comment-container input[type="submit"] {
+    color: #fff;
+    background-color: #0b0c10;
+    cursor: pointer;
+	transition: background 0.3;
+}
+
+.send-comment-container button {
+    color: #333;
+    background-color: transparent;
 }
 
 /* Section; Contact */

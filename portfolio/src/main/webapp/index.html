@@ -107,67 +107,93 @@
         </div>
 	</section>
 	<!-- Section: Gallery -->
-	<section id="gallery">
-		<div class="cont">
-			<div class="gallery-container w-3 h-3">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/IMG-1944.jpg"></div>
-					<div class="text">South Carolina</div>
-				</div>
-			</div>
-			<div class="gallery-container w-2 h-3">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/IMG-2454.jpg"></div>
-					<div class="text">Ocean</div>
-				</div>
-			</div>
-			<div class="gallery-container h-5">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/yamoussoukro.JPG"></div>
-					<div class="text">The Basilica of Our Lady of Peace of Yamoussoukro</div>
-				</div>
-			</div>
-			<div class="gallery-container h">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/IMG-2293.jpg"></div>
-					<div class="text">Nature</div>
-				</div>
-			</div>
-			<div class="gallery-container w-2 h-2">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/IMG-2217.jpg"></div>
-					<div class="text">Sunshine</div>
-				</div>
-			</div>
-			<div class="gallery-container h-2">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/outside.JPG"></div>
-					<div class="text">Ivory Coast</div>
-				</div>
-			</div>
-			<div class="gallery-container h-2">
-				<div class="gallery-item">
-					<div class="image"> <img src="images/cathedral.JPG"></div>
-					<div class="text">Inside the Basilica</div>
-				</div>
-			</div>	
-		</div>
-	</section>
+<section id="gallery">
+    <div class="cont">
+        <div class="gallery-container w-3 h-2">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/IMG-1944.jpg"></div>
+                <div class="text">South Carolina</div>
+            </div>
+        </div>
+        <div class="gallery-container w-2 h-2">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/IMG-2454.jpg"></div>
+                <div class="text">Ocean</div>
+            </div>
+        </div>
+        <div class="gallery-container w-2 h-2">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/outside.JPG"></div>
+                <div class="text">Ivory Coast</div>
+            </div>
+        </div>
+        <div class="gallery-container h-5">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/yamoussoukro.JPG"></div>
+                <div class="text">The Basilica of Our Lady of Peace of Yamoussoukro</div>
+            </div>
+        </div>
+        <div class="gallery-container w-2 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/trees.jpg"></div>
+                <div class="text">Garden</div>
+            </div>
+        </div>
+        <div class="gallery-container w-2 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/trees1.jpg"></div>
+                <div class="text">Lake</div>
+            </div>
+        </div>
+        <div class="gallery-container w-2 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/IMG-2217.jpg"></div>
+                <div class="text">Grass</div>
+            </div>
+        </div>
+        <div class="gallery-container w-1 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/pathway.jpg"></div>
+                <div class="text">Pathway</div>
+            </div>
+        </div>
+        <div class="gallery-container w-3 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/IMG-2293.jpg"></div>
+                <div class="text">Nature</div>
+            </div>
+        </div>
+        <div class="gallery-container w-4 h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/sunshine.jpg"></div>
+                <div class="text">Sunshine</div>
+            </div>
+        </div>
+        <div class="gallery-container h-3">
+            <div class="gallery-item">
+                <div class="image"> <img src="images/cathedral.JPG"></div>
+                <div class="text">Inside the Basilica</div>
+            </div>
+        </div>
+    </div>
+</section>
+
     <!-- Section: Comments -->
     <section id="comments" class="bg-light">
         <div class="container">
+            <h2 class="comments-heading">Comment <span class="text-primary">Section</span></h2>
             <h2>
-                <span class="text-primary">
+                <span class="comment-primary">
                     <ul id="comments-placeholder">
                     </ul>
                 </span> 
             </h2>
            <form action="/data" method="POST">
-               <p>Please Enter how many comments you wish to view (max=20).</p>
-               <input type="number" name="number-of-comments" id='comments-num' min="1" max="20" value="5">
+               <p>Please Enter how many comments you wish to view (max=10).</p>
+               <input type="number" name="number-of-comments" id='comments-num' min="1" max="10" value="3">
                <input type="submit" />
            </form>
-           <div id="log-in-out">
+           <div class="log-in-out" id="log-in-out">
             </div>
         </div>
     </section>

@@ -1,9 +1,9 @@
 // Copyright 2019 Google LLC
-//
+// 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 //     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/* handles user credentials */
 @WebServlet("/log-in-out")
 public class LogInOut extends HttpServlet {
 
@@ -38,13 +39,13 @@ public class LogInOut extends HttpServlet {
       response.getWriter().println("<p>Hello " + userEmail + "!</p>");
 
       response.getWriter().println("<form action=\"/delete-data\" method=\"POST\">");
-      response.getWriter().println("<input type=\"submit\" name=\"delete-comments\" value=\"Delete Comments\" /> </form>");
-      response.getWriter().println("<form action=\"/data\" method=\"POST\">");
-      response.getWriter().println("<p>Enter your name: </p>");
-      response.getWriter().println("<textarea name=\"name-input\"></textarea> <br/><br/>");
-      response.getWriter().println("<p>Enter your comment: </p>");
-      response.getWriter().println("<textarea name=\"comment-input\" pattern=\"[A-Za-z0-9]{1,20}\"></textarea> <br/><br/>");
-      response.getWriter().println("<input type=\"submit\" /> </form>");
+      response.getWriter().println("<input type=\"submit\" name=\"delete-comments\" value=\"Delete Your Most Recent Comment\" /> </form>");
+      response.getWriter().println("<div class=\"send-comment-container\"><h3>Leave <span class=\"text-primary\"> A Comment</span></h3><form action=\"/data\" method=\"POST\">");
+      response.getWriter().println("<textarea placeholder=\"Add Your Name\" id=\"name-input\" name=\"name-input\"></textarea>");
+      response.getWriter().println("<textarea placeholder=\"Add Your Comment\" id=\"comment-input\" name=\"comment-input\" pattern=\"[A-Za-z0-9]{1,20}\"></textarea> ");
+      response.getWriter().println("<div class=\"comment-btn\"> <input type=\"submit\" value=\"Comment\"/> ");
+      response.getWriter().println("<button id=\"clear\" href=\"#\">Cancel</button>");
+      response.getWriter().println("</div></form></div>");
 
       response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
 
