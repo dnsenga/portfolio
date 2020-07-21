@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.HashSet;
 
+/** Return a collection of possible time ranges for a meeting, given a collection of attendees and a list of relevant events **/
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // handle outside cases
@@ -34,6 +35,7 @@ public final class FindMeetingQuery {
 
     ArrayList<TimeRange> timeSlots = new ArrayList<TimeRange>();
     Collection<TimeRange> timeSlotsWithOptionalAttendees = new ArrayList<TimeRange>();
+
     // Find event that are attended by at least one of our people
     Collection<String> attendees = request.getAttendees();
     Collection<String> optionalAttendees = request.getOptionalAttendees();
@@ -55,7 +57,6 @@ public final class FindMeetingQuery {
         return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
-    //ArrayList<TimeRange> relevantEventsTimeRange = new ArrayList<TimeRange>();
     ArrayList<TimeRange> relevantEventsForMandatoryAttendeesTimeRange = new ArrayList<TimeRange>();
     ArrayList<TimeRange> relevantEventsForOptionalAttendeesTimeRange = new ArrayList<TimeRange>();
     for (Event e: relevantEventsForMandatoryAttendees){
@@ -65,8 +66,6 @@ public final class FindMeetingQuery {
     for (Event e: relevantEventsForOptionalAttendees){
         relevantEventsForOptionalAttendeesTimeRange.add(e.getWhen());
     }
-
-    //return queryOptional(relevantEventsForMandatoryAttendeesTimeRange, relevantEventsForOptionalAttendeesTimeRange, request.getDuration());
 
    timeSlots = queryHelper(relevantEventsForMandatoryAttendeesTimeRange, request.getDuration());
    if (optionalAttendees.size() != 0){
@@ -130,6 +129,7 @@ public final class FindMeetingQuery {
     while (true){
       if (j == timeSlots.size()) break;
     
+      // add a new time range that works
       TimeRange tempTR = TimeRange.fromStartEnd(start, end, false);
       if (tempTR.contains(timeSlots.get(j))) timeSlotsWithOptionalAttendees.add(timeSlots.get(j));
       else if (timeSlots.get(j).contains(tempTR) && tempTR.duration() >= meetingDuration) timeSlotsWithOptionalAttendees.add(tempTR);
