@@ -40,27 +40,16 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   int numberOfCommentsToDisplay = 5;
+  int MAX_LIMIT_NUM_COMMENTS_DISPLAYED = 10;
+  int MIN_LIMIT_NUM_COMMENTS_DISPLAYED = 1;
+  int DEFAULT_NUM_COMMENTS_DISPLAYED = 3;
+  String DATASTORE_ENTITY_NAME = "commentEntity";
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("commentEntity").addSort("timestamp", SortDirection.DESCENDING);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      String email = (String) entity.getProperty("email");
-      String commentText = (String) entity.getProperty("comment");
-      String sentimentScore = String.valueOf(entity.getProperty("sentimentScore"));
-      sentimentScore = sentimentScore.substring(0,Math.min(4,sentimentScore.length()));
-      long timestamp = (long) entity.getProperty("timestamp");
-
-      Comment comment = new Comment(id, name, email, commentText, sentimentScore, timestamp);
-      comments.add(comment);
-    }
+    comments = retrieveComments();
+    
     // Shuffle the comments
     Collections.shuffle(comments);
 
@@ -85,24 +74,8 @@ public class DataServlet extends HttpServlet {
     String email = userService.getCurrentUser().getEmail();
 
     if (newComment != null){
-      // calculate sentiment
-      Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
-      LanguageServiceClient languageService = LanguageServiceClient.create();
-      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-      float sentimentScoreFloat = sentiment.getScore();
-      languageService.close();
-      String sentimentScore =String.valueOf(sentimentScoreFloat);
-
-      // add comment
-      Entity commentEntity = new Entity("commentEntity");
-      commentEntity.setProperty("name", name);
-      commentEntity.setProperty("email", email);
-      commentEntity.setProperty("comment", newComment);
-      commentEntity.setProperty("sentimentScore", sentimentScore);
-      commentEntity.setProperty("timestamp", timestamp);
-
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(commentEntity);
+      String sentimentScore = getSentimentScore(newComment);
+      storeComment(name, email, newComment, sentimentScore, timestamp);
     }
     // Redirect back to the HTML page.
     response.sendRedirect("index.html");
@@ -118,14 +91,73 @@ public class DataServlet extends HttpServlet {
     try {
       userChoice = Integer.parseInt(userChoiceString);
     } catch (NumberFormatException e) {
-      return 5;
+      return DEFAULT_NUM_COMMENTS_DISPLAYED;
     }
 
     // Check that the input is between 1 and 20.
-    if (userChoice < 1 || userChoice > 10) {
-      return 5;
+    if (userChoice < MIN_LIMIT_NUM_COMMENTS_DISPLAYED || userChoice > MAX_LIMIT_NUM_COMMENTS_DISPLAYED) {
+      return DEFAULT_NUM_COMMENTS_DISPLAYED;
     }
 
     return userChoice;
+  }
+
+  /** Stores a single comment in datastore*/
+
+  private void storeComment(String name, String email, String newComment, String sentimentScore, long timestamp){
+    // add comment
+    Entity commentEntity = new Entity(DATASTORE_ENTITY_NAME);
+    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("email", email);
+    commentEntity.setProperty("comment", newComment);
+    commentEntity.setProperty("sentimentScore", sentimentScore);
+    commentEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
+  }
+
+  /** Retrieves a single comment from datastore */
+  private List<Comment> retrieveComments() {
+    int SIGNIFICANT_FIGURES_DISPLAY_SENT_SCORE = 4;
+    List<Comment> comments = new ArrayList<>();
+
+    Query query = new Query(DATASTORE_ENTITY_NAME).addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String name = (String) entity.getProperty("name");
+      String email = (String) entity.getProperty("email");
+      String commentText = (String) entity.getProperty("comment");
+      String sentimentScore = String.valueOf(entity.getProperty("sentimentScore"));
+      sentimentScore = sentimentScore.substring(0,Math.min(SIGNIFICANT_FIGURES_DISPLAY_SENT_SCORE,sentimentScore.length()));
+      long timestamp = (long) entity.getProperty("timestamp");
+
+      Comment comment = new Comment(id, name, email, commentText, sentimentScore, timestamp);
+      comments.add(comment);
+    }
+
+    return comments;
+  }
+
+  /** Return a sentiment score for a given string */
+  private String getSentimentScore(String newComment){
+    String SENTIMENT_API_FAILURE = "N/A";
+    try {
+      // calculate sentiment
+      Document doc = Document.newBuilder().setContent(newComment).setType(Document.Type.PLAIN_TEXT).build();
+      LanguageServiceClient languageService = LanguageServiceClient.create();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+      float sentimentScoreFloat = sentiment.getScore();
+      languageService.close();
+      String sentimentScore =String.valueOf(sentimentScoreFloat);
+
+    return sentimentScore;
+    } catch (IOException e){
+        return SENTIMENT_API_FAILURE;
+    }
   }
 }

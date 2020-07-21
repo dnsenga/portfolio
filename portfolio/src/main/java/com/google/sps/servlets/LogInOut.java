@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/* handles user credentials */
 @WebServlet("/log-in-out")
 public class LogInOut extends HttpServlet {
 
